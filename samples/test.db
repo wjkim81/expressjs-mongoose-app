@@ -1,0 +1,62 @@
+organizations
+{
+    "name": "VNTC",
+    "country": "South Korea",
+    "type": "VNTC"
+}
+
+{
+    "name": "경북대학교",
+    "country": "South Korea",
+    "type": "University"
+}
+
+{
+    "name": "서울대학교",
+    "country": "South Korea",
+    "type": "University"
+}
+
+members
+{
+    "username": "vntc",
+    "password": "password",
+    "firstname": "Wonjin",
+    "lastname": "Kim",
+    "organization": "--------",
+    "managerName": "Woogi Min",
+    "phoneNum": "1234567890",
+    "mobileNum": "1234567890"
+}
+
+
+{
+    "username": "kyungpook",
+    "password": "password",
+    "firstname": "Woogi",
+    "lastname": "Min",
+    "organization": "-------",
+    "managerName": "Woogi Min",
+    "phoneNum": "1234567890",
+    "mobileNum": "1234567890"
+}
+
+{
+    "username": "snu",
+    "password": "password",
+    "firstname": "Woogi",
+    "lastname": "Min",
+    "organization": "-------",
+    "managerName": "Woogi Min",
+    "phoneNum": "1234567890",
+    "mobileNum": "1234567890"
+}
+
+patients
+
+{
+    "name": "이경석",
+    "birthday": "03/01/2001",
+    "sex": "Female",
+    "organization": "---"
+}
