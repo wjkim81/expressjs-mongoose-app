@@ -22,8 +22,16 @@ patientRouter.route('/')
   }, (err) => next(err))
   .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
+.post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
+  console.log('Before updating req.body: ', req.body);
+  //var patient = req.body;
+  req.body.organization = req.user.organization;
+  req.body.bodyMeasurements[0].updatedBy = req.user._id;
+  req.body.spineInfos[0].updatedBy = req.user._id;
+  if (req.body.xRayFiles) req.body.xRayFiles[0].updatedBy = req.user._id;
+  if (req.body.threeDFiles) req.body.threeDFiles[0].updatedBy = req.user._id;
+  console.log('After updating req.body: ', req.body);
   /**
    * req.body.organizationId: organization._id
    */

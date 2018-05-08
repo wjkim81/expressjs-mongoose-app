@@ -60,10 +60,12 @@ var spineInfoSchema = new Schema({
     required: true,
     type: Number
   },
+  /*
   stage: {
     required: true,
     type: String
-  }, 
+  },
+  */
   apexStart1: {
     required: true,
     type: String
@@ -144,7 +146,12 @@ var patientSchema = mongoose.Schema({
     ref: 'Member'
   },
   */
-  name: {
+  firstname: {
+    required: true,
+    type: String,
+    default: ''
+  },
+  lastname: {
     required: true,
     type: String,
     default: ''
@@ -179,7 +186,7 @@ var patientSchema = mongoose.Schema({
   spineInfos: [spineInfoSchema],
   xRayFiles: [xRaySchema],
   threeDFiles: [threeDSchema],
-  patientVisits: [Date]
+  visitedDays: [Date]
 }, {
   timestamps: true
 });
