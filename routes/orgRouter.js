@@ -58,10 +58,10 @@ orgRouter.route('/:orgId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
 .get(cors.cors,  authenticate.verifyMember, (req,res,next) => {
   Organizations.findById(req.params.orgId)
-  .then((patient) => {
+  .then((org) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    return res.json(patient);
+    return res.json(org);
   }, (err) => next(err))
   .catch((err) => next(err));
 })
@@ -113,5 +113,18 @@ orgRouter.route('/:orgId')
   }, (err) => next(err))
   .catch((err) => next(err));
 });
+
+orgRouter.route('/:orgId/patients')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
+.get(cors.cors,  authenticate.verifyMember, (req,res,next) => {
+  Organizations.findById(req.params.orgId)
+  .populate('patients')
+  .then((org) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(org.patients);
+  }, (err) => next(err))
+  .catch((err) => next(err));
+})
 
 module.exports = orgRouter;

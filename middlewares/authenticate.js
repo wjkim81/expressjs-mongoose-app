@@ -23,6 +23,7 @@ opts.secretOrKey = config.secretKey;
 exports.jwtPassport = passport.use(new JwtStrategy(opts,
   (jwt_payload, done) => {
     console.log("JWT payload: ", jwt_payload);
+    /*
     Member.findOne({_id: jwt_payload._id}, (err, member) => {
       if (err) {
         return done(err, false);
@@ -34,14 +35,25 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts,
         return done(null, false);
       }
     });
+    */
+   Member.findOne({_id: jwt_payload._id})
+   .populate('organization')
+   .then((member) => {
+     if (member)
+        return done(null, member);
+      else
+        return done(null, false);
+   }, (err) => {
+     return done(err, false);
+   });
   }));
 
 exports.verifyMember = passport.authenticate('jwt', {session: false});
 
 exports.verifyAdmin = function(req, res, next) {
-  console.log(`req.member.admin: ${req.member.admin}`);
+  console.log(`req.user.admin: ${req.user.admin}`);
   
-  if (req.member.admin) {
+  if (req.user.admin) {
     next();
   } else {
     var err = new Error('You are not authorized to perform this operation!');

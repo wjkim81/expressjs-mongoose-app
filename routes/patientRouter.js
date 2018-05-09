@@ -14,7 +14,17 @@ patientRouter.use(bodyParser.json());
 patientRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
 .get(cors.cors, authenticate.verifyMember, (req,res,next) => {
-  Patients.find(req.query)
+  console.log('req.query: ', req.query);
+  console.log('req.user: ', req.user);
+  var query = {};
+  if (req.user.organization) query.organization = req.user.organization;
+  if (req.query) query.updatedAt = {"$gte": req.query.startDate, "$lte": req.query.endDate};
+
+  console.log('query: ', query);
+
+  //Patients.find({ "organization": req.user.organization })
+  Patients.find(query)
+  .populate('organization')
   .then((patients) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
@@ -27,8 +37,8 @@ patientRouter.route('/')
   console.log('Before updating req.body: ', req.body);
   //var patient = req.body;
   req.body.organization = req.user.organization;
-  req.body.bodyMeasurements[0].updatedBy = req.user._id;
-  req.body.spineInfos[0].updatedBy = req.user._id;
+  if (req.body.bodyMeasurements) req.body.bodyMeasurements[0].updatedBy = req.user._id;
+  if (req.body.spineInfos) req.body.spineInfos[0].updatedBy = req.user._id;
   if (req.body.xRayFiles) req.body.xRayFiles[0].updatedBy = req.user._id;
   if (req.body.threeDFiles) req.body.threeDFiles[0].updatedBy = req.user._id;
   console.log('After updating req.body: ', req.body);
@@ -43,9 +53,22 @@ patientRouter.route('/')
       err.status = 404;
       return next(err);
     }
+    /*
+    var patient = new Patients();
+    patient.firstname = req.body.firstname;
+    patient.lastname = req.body.lastname;
+    patient.birthday = req.body.birthday;
+    patient.sex = req.body.sex;
+    patient.organization = req.body.organization;
 
+    if (req.body.bodyMeasurements) patient.bodyMeasurements.push(req.body.bodyMeasurements[0]);
+    if (req.body.spineInfos) patient.spineInfos.push(req.body.spineInfos[0]);
+    if (req.body.xRayFiles) patient.xRayFiles.push(req.body.xRayFiles[0]);
+    if (req.body.threeDFiles) patient.threeDFiles.push(req.body.threeDFiles[0]);
+    */
     Patients.create(req.body)
     //.populate('orgId')
+    //patient.save()
     .then((patient) => {
       console.log('Patients Created ', patient);
       org.patients.push(patient._id);
@@ -79,6 +102,11 @@ patientRouter.route('/:patientId')
 .get(cors.cors, authenticate.verifyMember,
 (req,res,next) => {
   Patients.findById(req.params.patientId)
+  .populate('organization')
+  .populate('spineInfos.updatedBy')
+  .populate('bodyMeasurements.updatedBy')
+  .populate('xRayFiles.updatedBy')
+  .populate('threeDFiles.updatedBy')
   .then((patient) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

@@ -15,6 +15,8 @@ var usersRouter = require('./routes/users');
 var memberRouter = require('./routes/member');
 var orgRouter = require('./routes/orgRouter');
 var patientRouter = require('./routes/patientRouter');
+var adminRouter = require('./routes/adminRouter');
+var uploadRouter = require('./routes/uploadRouter');
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -74,7 +76,8 @@ app.use(cors({origin: 'http://localhost:4200'}));
 
 app.use('/organizations', orgRouter);
 app.use('/patients', patientRouter);
-
+app.use('/admins', adminRouter);
+app.use('/imageUpload', uploadRouter);
 
 
 
