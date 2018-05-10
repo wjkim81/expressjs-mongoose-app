@@ -12,7 +12,7 @@ router.use(bodyParser.json());
 
 /* GET users listing. */
 router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
-router.get('/', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+router.get('/', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   console.log('GET / req.user: ', req.user);
   Members.find({})
@@ -25,7 +25,7 @@ router.get('/', cors.corsWithOptions, authenticate.verifyMember, //authenticate.
   .catch((err) => next(err));
 });
 
-router.post('/signup', cors.corsWithOptions, authenticate.verifyMember,
+router.post('/signup', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   //console.log(req.body);
   //console.log(typeof(req.body));
@@ -205,7 +205,7 @@ router.get('/member/:memberId', cors.corsWithOptions, authenticate.verifyMember,
   .catch((err) => next(err));
 });
 
-router.delete('/remove/:memberId', cors.corsWithOptions, authenticate.verifyMember,
+router.delete('/remove/:memberId', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   Members.findByIdAndRemove(req.params.memberId)
   .then((member) => {

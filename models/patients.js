@@ -198,33 +198,19 @@ var patientSchema = mongoose.Schema({
 });
 
 /*
-patientSchema.pre('save', (next) => {
-  let numBd = this.bodyMeasurements.length;
-  let numSp = this.spineInfos.length;
-  let numXr = this.xRayFiles.length;
-  let numThr = this.threeDFiles.length;
-
-  if (this.bodyMeasurements[numBd-1]) {
-    if (!this.bodyMeasurements[numBd-1].createdAt) this.bodyMeasurements[numBd-1].createdAt = Date.now();
-    this.bodyMeasurements[numBd-1].updatedAt = Date.now();
-  }
-  if (this.spineInfos[numBd-1]) {
-    if (!this.spineInfos[numBd-1].createdAt) this.spineInfos[numBd-1].createdAt = Date.now();
-    this.spineInfos[numBd-1].updatedAt = Date.now();
-  }
-  if (this.xRayFiles[numBd-1]) {
-    if (!this.xRayFiles[numBd-1].createdAt) this.xRayFiles[numBd-1].createdAt = Date.now();
-    this.xRayFiles[numBd-1].updatedAt = Date.now();
-  }
-  if (this.threeDFiles[numBd-1]) {
-    if (!this.threeDFiles[numBd-1].createdAt) this.threeDFiles[numBd-1].createdAt = Date.now();
-    this.threeDFiles[numBd-1].updatedAt = Date.now();
-  }
-  
-  return next();
+patientSchema.post('save', (doc, next) => {
+  doc
+  .populate('bodyMeasurements')
+  .populate('spineInfos')
+  .populate('xRayFiles')
+  .populate('threeDFiles')
+  .populate('visitedDays')
+  .execPopulate(() => {
+    console.log(doc);
+    next();
+  });
 });
 */
-
 var Patients = mongoose.model('Patient', patientSchema);
 
 module.exports = Patients;

@@ -13,7 +13,8 @@ orgRouter.use(bodyParser.json());
 
 orgRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
-.get(cors.cors, authenticate.verifyMember, (req,res,next) => {
+.get(cors.cors, authenticate.verifyMember, authenticate.verifyAdmin,
+(req,res,next) => {
   Organizations.find(req.query)
   //.populate('Organizations')
   //.populate('members')
@@ -24,7 +25,7 @@ orgRouter.route('/')
   }, (err) => next(err))
   .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+.post(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
   (req, res, next) => {
   //console.log(`req.user.admin: ${req.user.admin}`);
   console.log('POST /organizations start');
@@ -37,12 +38,12 @@ orgRouter.route('/')
   }, (err) => next(err))
   .catch((err) => next(err));
 })
-.put(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+.put(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
   (req, res, next) => {
   res.statusCode = 403;
   res.end('PUT operation not supported on /orgnizations');
 })
-.delete(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+.delete(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
   (req, res, next) => {
   //console.log(req.user.admin);
   Organizations.remove({})
@@ -56,7 +57,8 @@ orgRouter.route('/')
 
 orgRouter.route('/:orgId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
-.get(cors.cors,  authenticate.verifyMember, (req,res,next) => {
+.get(cors.cors,  authenticate.verifyMember, authenticate.verifyAdmin,
+(req,res,next) => {
   Organizations.findById(req.params.orgId)
   .then((org) => {
     res.statusCode = 200;
@@ -65,12 +67,12 @@ orgRouter.route('/:orgId')
   }, (err) => next(err))
   .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+.post(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   res.statusCode = 403;
   res.end('POST operation not supported on /organizations/'+ req.params.orgId);
 })
-.put(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+.put(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   Organizations.findByIdAndUpdate(req.params.orgId, {
     $set: req.body
@@ -82,7 +84,7 @@ orgRouter.route('/:orgId')
   }, (err) => next(err))
   .catch((err) => next(err));
 })
-.delete(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+.delete(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   Organizations.findByIdAndRemove(req.params.orgId)
   .then((org) => {
@@ -116,7 +118,8 @@ orgRouter.route('/:orgId')
 
 orgRouter.route('/:orgId/patients')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
-.get(cors.cors,  authenticate.verifyMember, (req,res,next) => {
+.get(cors.cors,  authenticate.verifyMember, authenticate.verifyAdmin,
+(req,res,next) => {
   Organizations.findById(req.params.orgId)
   .populate('patients')
   .then((org) => {
