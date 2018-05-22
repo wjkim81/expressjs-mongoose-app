@@ -34,6 +34,7 @@ var bodyMeasurementSchema = new Schema({
     required: true,
     type: Number
   },
+  /*
   lumber: {
     required: true,
     type: Number
@@ -42,6 +43,7 @@ var bodyMeasurementSchema = new Schema({
     required: true,
     type: Number
   }
+  */
 }, {
   timestamps: true
 });

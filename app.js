@@ -68,7 +68,7 @@ app.use('*', (req, res, next) => {
   console.log('req.headers.authorization: ', req.headers.authorization);
   next();
 })
-app.use('/', indexRouter);
+
 //app.use('/users', usersRouter);
 app.use('/members', memberRouter);
 
@@ -81,7 +81,7 @@ app.use('/organizations', orgRouter);
 app.use('/patients', patientRouter);
 app.use('/admins', adminRouter);
 app.use('/imageUpload', uploadRouter);
-
+app.use('/', indexRouter);
 
 
 // catch 404 and forward to error handler
