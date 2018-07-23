@@ -2,24 +2,41 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var organizationSchema = new Schema({
-  'name': {
+  name: {
     required: true,
     unique: true,
     type: String
   },
-  'country': {
+  country: {
     required: true,
     type: String
   },
-  'type': {
+  type: {
     required: true,
     type: String
   },
-  'patients': [{
+  city: {
+    type: String,
+    default: '',
+  },
+  address: {
+    type: String,
+    default: '',
+  },
+  postCode: {
+    type: String,
+    default: '',
+  },
+  managerName: {
+    //required: true,
+    type: String,
+    default: ''
+  },
+  patients: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient'
   }],
-  'members': [{
+  members: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Member'
   }]

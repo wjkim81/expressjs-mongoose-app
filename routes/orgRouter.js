@@ -25,7 +25,7 @@ orgRouter.route('/')
   }, (err) => next(err))
   .catch((err) => next(err));
 })
-.post(cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
+.post(cors.corsWithOptions, //authenticate.verifyMember, authenticate.verifyAdmin,
   (req, res, next) => {
   //console.log(`req.user.admin: ${req.user.admin}`);
   console.log('POST /organizations start');

@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Member = require('./members');
+//const Member = require('./members');
 
 var bodyMeasurementSchema = new Schema({
   updatedBy: {
@@ -27,7 +27,7 @@ var bodyMeasurementSchema = new Schema({
     type: Number
   },
   waist: {
-    reqiuired: true,
+    required: true,
     type: Number
   },
   hip: {
@@ -68,7 +68,7 @@ var spineInfoSchema = new Schema({
     type: String
   },
   */
-  apexStart1: {
+  curveStart1: {
     required: true,
     type: String
   },
@@ -76,7 +76,7 @@ var spineInfoSchema = new Schema({
     required: true,
     type: Number
   },
-  apexEnd1: {
+  curveEnd1: {
     required: true,
     type: String
   },
@@ -84,25 +84,25 @@ var spineInfoSchema = new Schema({
     required: true,
     type: String
   },
-  apexStart2: {
+  curveStart2: {
     type: String
   },
   cobbAng2: {
     type: Number
   },
-  apexEnd2: {
+  curveEnd2: {
     type: String
   },
   direction2: {
     type: String
   },
-  apexStart3: {
+  curveStart3: {
     type: String
   },
   cobbAng3: {
     type: Number
   },
-  apexEnd3: {
+  curveEnd3: {
     type: String
   },
   direction3: {
@@ -129,6 +129,7 @@ var xRaySchema = new Schema({
   timestamps: true
 });
 
+/*
 var threeDSchema = new Schema({
   updatedBy: {
     required: true,
@@ -145,7 +146,7 @@ var threeDSchema = new Schema({
 }, {
   timestamps: true
 });
-
+*/
 var patientSchema = mongoose.Schema({
   /*
   updatedBy: {
@@ -183,18 +184,27 @@ var patientSchema = mongoose.Schema({
     ref: 'Organization'
   },
   /**
-   * patientId: Patient's own id used in organization
-   * This id is not relevant to id used in vntc system.
+   * hashKey is unique id web which is used for identification of the patient in mobile application.
+   * If this is not set, mobile cannot find information of the patient.
    */
-  patientId: {
-    type: Number,
-    default: ''
+  hashKey: {
+    type: String,
+    required: true,
+    unique: true
+    //default: ''
   },
+  /*
+  ordering: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ordering'
+  },
+  */
   bodyMeasurements: [bodyMeasurementSchema],
   spineInfos: [spineInfoSchema],
   xRayFiles: [xRaySchema],
-  threeDFiles: [threeDSchema],
-  visitedDays: [Date]
+  //threeDFiles: [threeDSchema],
+  visitedDays: [Date],
+  nextVisitDay: Date
 }, {
   timestamps: true
 });

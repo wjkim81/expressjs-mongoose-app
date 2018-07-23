@@ -11,12 +11,17 @@ var config = require('./config');
 var cors = require('cors');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//var usersRouter = require('./routes/users');
+var authRouter = require('./routes/web/authRouter');
+var mobileAuthRouter = require('./routes/mobile/authRouter');
+
 var memberRouter = require('./routes/member');
 var orgRouter = require('./routes/orgRouter');
 var patientRouter = require('./routes/patientRouter');
 var adminRouter = require('./routes/adminRouter');
 var uploadRouter = require('./routes/uploadRouter');
+
+var mobileRouter = require('./routes/mobile');
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -70,7 +75,10 @@ app.use('*', (req, res, next) => {
 })
 
 //app.use('/users', usersRouter);
+app.use('/auth', authRouter);
+app.use('/mobile/auth', mobileAuthRouter);
 app.use('/members', memberRouter);
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -81,6 +89,8 @@ app.use('/organizations', orgRouter);
 app.use('/patients', patientRouter);
 app.use('/admins', adminRouter);
 app.use('/imageUpload', uploadRouter);
+
+app.use('/mobile', mobileRouter);
 app.use('/', indexRouter);
 
 

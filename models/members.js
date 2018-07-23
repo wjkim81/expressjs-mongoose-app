@@ -3,17 +3,25 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
 
-var Member = new Schema({
+var MemberSchema = new Schema({
   //id: String,
   //username: String
-  //passwd: String
+  //passwordd: String
+
+  /**
+   * Members for Web
+   */
+  usertype: {
+    type: String,
+    default: 'web'
+  },
   admin: {
     type: Boolean,
     default: false
   },
   firstname: {
     type: String,
-      default: ''
+    default: ''
   },
   lastname: {
     type: String,
@@ -29,23 +37,6 @@ var Member = new Schema({
     type: String,
     default: ''
   },
-  city: {
-    type: String,
-    default: '',
-  },
-  address: {
-    type: String,
-    default: '',
-  },
-  postCode: {
-    type: String,
-    default: '',
-  },
-  managerName: {
-    //required: true,
-    type: String,
-    default: ''
-  },
   phoneNum: {
     //required: true,
     type: String,
@@ -55,15 +46,31 @@ var Member = new Schema({
     //required: true,
     type: String,
     default: ''
+  },
+  /**
+   * Members for mobile applications
+   * These are patients
+   */
+  /*
+  mobileMember: {
+    type: Boolean,
+    default: false
+  },
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Patient'
+  },
+  patientHashKey: {
+    type: String,
+    default: ''
   }
+  */
 }, {
   timestamps: true
 });
 
-Member.plugin(passportLocalMongoose, {
-  selectFields: 'firstname lastname organization'
-});
+MemberSchema.plugin(passportLocalMongoose);
 
-var Members = mongoose.model('Member', Member);
+var Members = mongoose.model('Member', MemberSchema);
 
 module.exports = Members;

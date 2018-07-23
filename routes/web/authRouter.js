@@ -1,29 +1,17 @@
 var express = require('express');
 const bodyParser = require('body-parser');
-var Members = require('../models/members');
-var Organizations = require('../models/organizations');
+var Members = require('../../models/members');
+var Organizations = require('../../models/organizations');
 
 var passport = require('passport');
-var authenticate = require('../middlewares/authenticate');
-var cors = require('./cors');
+var authenticate = require('../../middlewares/authenticate');
+var cors = require('../cors');
 
 var router = express.Router();
 router.use(bodyParser.json());
 
 /* GET users listing. */
 router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
-router.get('/', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
-(req, res, next) => {
-  console.log('GET / req.user: ', req.user);
-  Members.find({})
-  .populate('organization')
-  .then((members) =>{
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(members);
-  }, (err) => next(err))
-  .catch((err) => next(err));
-});
 
 router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
@@ -67,6 +55,8 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
       else {
         console.log(`Registering new member ${req.body.username}`)
 
+        member.usertype = 'web';
+
         if (req.body.firstname)
           member.firstname = req.body.firstname;
         if (req.body.lastname)
@@ -75,16 +65,6 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
           member.organization = req.body.organization;
         if (req.body.subject)
           member.subject = req.body.subject;
-        if (req.body.country)
-          member.country = req.body.country;
-        if (req.body.city)
-          member.city = req.body.city;
-        if (req.body.address)
-          member.address = req.body.address;
-        if (req.body.postCode)
-          member.postCode = req.body.postCode;
-        if (req.body.managerName)
-          member.managerName = req.body.managerName;
         if (req.body.phoneNum)
           member.phoneNum = req.body.phoneNum;
         if (req.body.mobileNum)
@@ -125,8 +105,8 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
 
 router.post('/login', cors.corsWithOptions, (req, res, next) => {
   console.log(req.body);
-  console.log('POST /members/login ing...');
-  passport.authenticate('local', {session: false}, (err, member, info) => {
+  console.log('POST /auth/login ing...');
+  passport.authenticate('webLocal', {session: false}, (err, member, info) => {
     //console.log(err);
     //console.log(`member._id: ${member._id}`)
     if (err) return next(err);
@@ -172,7 +152,7 @@ router.get('/logout', cors.corsWithOptions, (req, res, next) => {
 router.get('/checkJWTToken', cors.corsWithOptions, (req, res, next) => {
   console.log('GET /checkJWTToken');
   console.log('...ing');
-  passport.authenticate('jwt', {session: false}, (err, member, info) => {
+  passport.authenticate('webjwt', {session: false}, (err, member, info) => {
     console.log('passport.authenticate');
     console.log('GET /checkJWTToken member:', member);
     if (err) return next(err);
@@ -189,63 +169,6 @@ router.get('/checkJWTToken', cors.corsWithOptions, (req, res, next) => {
       return res.json({status: 'JWT valid!', success: true, member: member});
     }
   })(req, res, next);
-});
-
-
-
-/* GET member information with memberId. */
-router.get('/member/:memberId', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
-(req, res, next) => {
-  console.log('GET /:memberId req.user: ', req.user);
-  Members.findById(req.params.memberId)
-  .populate('organization')
-  .then((member) =>{
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(member);
-  }, (err) => next(err))
-  .catch((err) => next(err));
-});
-
-router.delete('/remove/:memberId', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
-(req, res, next) => {
-  Members.findByIdAndRemove(req.params.memberId)
-  .then((member) => {
-    if (!member) {
-      err = new Error('Member ' + member._id + ' is not found!');
-      err.status = 404;
-      return next(err);
-    }
-    Organizations.findById(member.organization)
-    .then((org) => {
-      console.log(`org: ${org}`);
-      if (!org) {
-        err = new Error('Organization ' + member.organization + ' is not found!');
-        err.status = 404;
-        return next(err);
-      }
-
-      /** 
-       * Find the index of member in organizations.members
-       * and remove member in corresponding organization.
-       */
-      let index = org.members.indexOf(member._id);
-      if (index >= 0) {
-        org.members.splice(index, 1);
-        org.save()
-        .then((org) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          return res.json(member);
-        }, (err) => next(err));
-      } else {
-        err = new Error('Member ' + member._id + ' is not found in organization ' + org._id);
-        err.status = 404;
-        return next(err);
-      }
-    }, (err) => next(err));
-  }, (err) => next(err))
-  .catch((err) => next(err));
 });
 
 module.exports = router;

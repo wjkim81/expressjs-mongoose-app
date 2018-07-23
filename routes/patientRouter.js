@@ -1,6 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+
+var crypto = require('crypto');
+
+
+//const mongoose = require('mongoose');
 const authenticate = require('../middlewares/authenticate');
 const cors = require('./cors');
 
@@ -41,45 +45,61 @@ patientRouter.route('/')
   if (req.body.spineInfos) req.body.spineInfos[0].updatedBy = req.user._id;
   if (req.body.xRayFiles) req.body.xRayFiles[0].updatedBy = req.user._id;
   if (req.body.threeDFiles) req.body.threeDFiles[0].updatedBy = req.user._id;
-  console.log('After updating req.body: ', req.body);
-  /**
-   * req.body.organizationId: organization._id
-   */
-  Organizations.findById(req.body.organization)
-  .then((org) => {
-    console.log(`org: ${org}`);
-    if (!org) {
-      err = new Error('Organization ' + req.body.organization + ' is not found!');
-      err.status = 404;
-      return next(err);
-    }
-    /*
-    var patient = new Patients();
-    patient.firstname = req.body.firstname;
-    patient.lastname = req.body.lastname;
-    patient.birthday = req.body.birthday;
-    patient.sex = req.body.sex;
-    patient.organization = req.body.organization;
 
-    if (req.body.bodyMeasurements) patient.bodyMeasurements.push(req.body.bodyMeasurements[0]);
-    if (req.body.spineInfos) patient.spineInfos.push(req.body.spineInfos[0]);
-    if (req.body.xRayFiles) patient.xRayFiles.push(req.body.xRayFiles[0]);
-    if (req.body.threeDFiles) patient.threeDFiles.push(req.body.threeDFiles[0]);
-    */
-    Patients.create(req.body)
-    //.populate('orgId')
-    //patient.save()
-    .then((patient) => {
-      console.log('Patients Created ', patient);
-      org.patients.push(patient._id);
-      org.save((err, org) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        return res.json(patient);        
-      }, (err) => next(err));
-    }, (err) => next(err));
-  }, (err) => next(err))
-  .catch((err) => next(err));
+  //updating 10 digits hash key
+  var hashKey = crypto.randomBytes(5).toString('hex');
+
+  Patients.findOne({hashKey: hashKey})
+  .then((patient) => {
+    if (patient) {
+      err = new Error('Hash Key ' + hassKey + ' is already used\n Please register Patient again');
+      err.status = 400;
+      return next(err);
+    } else {
+
+      req.body.hashKey = hashKey;
+      console.log('After updating req.body: ', req.body);
+      /**
+       * req.body.organizationId: organization._id
+       */
+      Organizations.findById(req.body.organization)
+      .then((org) => {
+        console.log(`org: ${org}`);
+        if (!org) {
+          err = new Error('Organization ' + req.body.organization + ' is not found!');
+          err.status = 404;
+          return next(err);
+        }
+        /*
+        var patient = new Patients();
+        patient.firstname = req.body.firstname;
+        patient.lastname = req.body.lastname;
+        patient.birthday = req.body.birthday;
+        patient.sex = req.body.sex;
+        patient.organization = req.body.organization;
+
+        if (req.body.bodyMeasurements) patient.bodyMeasurements.push(req.body.bodyMeasurements[0]);
+        if (req.body.spineInfos) patient.spineInfos.push(req.body.spineInfos[0]);
+        if (req.body.xRayFiles) patient.xRayFiles.push(req.body.xRayFiles[0]);
+        if (req.body.threeDFiles) patient.threeDFiles.push(req.body.threeDFiles[0]);
+        */
+        Patients.create(req.body)
+        //.populate('orgId')
+        //patient.save()
+        .then((patient) => {
+          console.log('Patients Created ', patient);
+          org.patients.push(patient._id);
+          org.save((err, org) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            return res.json(patient);        
+          }, (err) => next(err));
+        }, (err) => next(err));
+      }, (err) => next(err))
+      .catch((err) => next(err));
+    }
+  });
+
 })
 .put(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
