@@ -95,8 +95,7 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
           if (err) {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
-            res.json({err: err});
-            return ;
+            return res.json({err: err});
           }
           console.log(`member._id: ${member._id}`)
           console.log(`org.members: ${org.members}`)
@@ -107,8 +106,7 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
             if (err) {
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
-              res.json({err: err});
-              return;
+              return res.json({err: err});
             }
             //passport.authenticate('local')(req, res, () => {
               res.statusCode = 200;

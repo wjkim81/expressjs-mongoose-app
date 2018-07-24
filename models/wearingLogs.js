@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 //const Member = require('./members');
 
 var wearingLogSchema = new Schema({
-  on: {
+  startTime: {
     type: Date,
     required: true,
   },
-  off: {
+  endTime: {
     type: Date,
     required: true,
   }
@@ -22,7 +22,7 @@ var wearingLogsSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MobileMember'
   },
-  wearingLogs: [wearingLogSchema],
+  logs: [wearingLogSchema],
 }, {
   timestamps: true
 });

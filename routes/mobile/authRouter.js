@@ -41,16 +41,17 @@ router.post('/signup', cors.corsWithOptions,
         if (req.body.hashKey) {
           mobileMember.hashKey = req.body.hashKey;
 
-          Patients.find({'hashKey': req.body.hashKey})
+          Patients.findOne({'hashKey': req.body.hashKey})
           .then((patient) => {
             if (!patient) {
-              err = new Error('Hash Key ' + hashKey + ' is not found/nPlease consult with your doctor');
+              err = new Error('Hash Key ' + req.body.hashKey + ' is not found/nPlease consult with your doctor');
               err.status = 400;
               return next(err);
             }
             console.log('Patient ' + patient._id + ' is found with patient ' + req.body.hashKey);
             mobileMember.patient = patient._id;
-            mobileMember.save((err, mobileMember) => {
+            
+            return mobileMember.save((err, mobileMember) => {
               console.log('Save mobileMember');
               if (err) {
                 res.statusCode = 400;

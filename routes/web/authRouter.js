@@ -90,11 +90,11 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
               res.json({err: err});
               return;
             }
-            //passport.authenticate('local')(req, res, () => {
+            passport.authenticate('webLocal')(req, res, () => {
               res.statusCode = 200;
               res.setHeader('Content-Type', 'application/json');
               res.json({success: true, status: 'Registration Successful!'});
-            //});
+            });
           });
         });
       }

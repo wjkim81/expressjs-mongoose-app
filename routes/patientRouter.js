@@ -92,7 +92,7 @@ patientRouter.route('/')
           org.save((err, org) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            return res.json(patient);        
+            return res.json(patient);
           }, (err) => next(err));
         }, (err) => next(err));
       }, (err) => next(err))
