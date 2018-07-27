@@ -156,12 +156,12 @@ var patientSchema = mongoose.Schema({
   },
   */
   firstname: {
-    required: true,
+    //required: true,
     type: String,
     default: ''
   },
   lastname: {
-    required: true,
+    //required: true,
     type: String,
     default: ''
   },

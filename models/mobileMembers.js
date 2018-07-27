@@ -28,8 +28,9 @@ var MobileMemberSchema = new Schema({
     ref: 'Patient'
   },
   hashKey: {
-    type: String
+    type: String,
     //unique: true
+    default: ''
   },
   wearingLogs: {
     type: mongoose.Schema.Types.ObjectId,

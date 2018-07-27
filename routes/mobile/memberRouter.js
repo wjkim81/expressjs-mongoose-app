@@ -181,7 +181,7 @@ memberRouter.route('/hashKey/:hashKey')
 .delete(cors.corsWithOptions,  authenticate.verifyMobileMember,
 (req, res, next) => {
   res.statusCode = 403;
-  res.end('DELETE operation not supported on /mobile/member/hashkey');
+  res.end('DELETE operation not supported on /mobile/member/hashkey/' + req.params.hashKey);
 });
 
 memberRouter.route('/wearingLogs/')
@@ -225,8 +225,8 @@ memberRouter.route('/wearingLogs/')
       }
       //console.log('wearingLogs: ' + wearingLogs);
       req.body.forEach((log) => {
-        if (!wearingLogs.logs.includes(log)) wearingLogs.logs.push(log);
-      })
+        wearingLogs.logs.push(log);
+      });
 
       wearingLogs.save()
       .then((wearingLogs) => {
@@ -237,11 +237,19 @@ memberRouter.route('/wearingLogs/')
     }, (err) => next(err))
     .catch((err) => next(err));
   } else {
-    WearingLogs.create(req.body)
+    var wearingLogs = new WearingLogs();
+    wearingLogs.mobileMember = req.user._id;
+
+    req.body.forEach((log) => {
+      wearingLogs.logs.push(log);
+    });
+
+
+    wearingLogs.save()
     .then((wearingLogs) => {
       console.log('wearingLogs: ' + wearingLogs);
       
-      MobileMembers.findById(req.user._id)
+      return MobileMembers.findById(req.user._id)
       .then((mobileMember) => {
         mobileMember.wearingLogs = wearingLogs._id;
         return mobileMember.save((err, mobileMember) => {

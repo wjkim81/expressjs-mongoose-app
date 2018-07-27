@@ -44,7 +44,7 @@ router.post('/signup', cors.corsWithOptions,
           Patients.findOne({'hashKey': req.body.hashKey})
           .then((patient) => {
             if (!patient) {
-              err = new Error('Hash Key ' + req.body.hashKey + ' is not found/nPlease consult with your doctor');
+              err = new Error('You are registered, But hash Key ' + req.body.hashKey + ' is not found. Please consult with your doctor');
               err.status = 400;
               return next(err);
             }
@@ -54,7 +54,7 @@ router.post('/signup', cors.corsWithOptions,
             return mobileMember.save((err, mobileMember) => {
               console.log('Save mobileMember');
               if (err) {
-                res.statusCode = 400;
+                res.statusCode = 500;
                 res.setHeader('Content-Type', 'application/json');
                 res.json({err: err});
                 return;
