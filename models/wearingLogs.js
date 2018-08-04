@@ -13,9 +13,9 @@ var wearingLogSchema = new Schema({
     type: Date,
     required: true,
   }
-}, {
+}/*, {
   timestamps: true
-});
+}*/);
 
 var wearingLogsSchema = mongoose.Schema({
   mobileMember: {
@@ -23,9 +23,9 @@ var wearingLogsSchema = mongoose.Schema({
     ref: 'MobileMember'
   },
   logs: [wearingLogSchema],
-}, {
+}/* {
   timestamps: true
-});
+}*/);
 
 var WearingLogs = mongoose.model('WearingLogs', wearingLogsSchema);
 

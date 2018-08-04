@@ -112,7 +112,7 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
     if (err) return next(err);
 
     if (!member) {
-      console.log('!member 401 /members/login');
+      console.log('!member 401 /auth/login');
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json');
       res.json({success: false, status: 'Login Unsuccessful!', err: info});
@@ -120,7 +120,7 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
       req.login(member, {session: false}, (err) => {
         //console.log('login err: ', err)
         if (err) {
-          console.log('logIn member 401 /members/login');
+          console.log('logIn member 401 /auth/login');
           res.statusCode = 401;
           res.setHeader('Content-Type', 'application/json');
           res.json({success: false, status: 'Login Unsuccessful!', err: info});

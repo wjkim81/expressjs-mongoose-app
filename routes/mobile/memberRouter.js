@@ -195,7 +195,7 @@ memberRouter.route('/wearingLogs/')
   .then((wearingLogs) => {
     console.log('wearingLogs: ' + req.user.wearingLogs);
 
-    if (!req.user.wearingLogs) {
+    if (!wearingLogs) {
       console.log('wearingLogs are not yet created');
       err = new Error('Wearing logs + ' + req.user.wearingLogs +
                       ' with mobile member ' + req.user._id + ' is not found');
@@ -228,7 +228,7 @@ memberRouter.route('/wearingLogs/')
         wearingLogs.logs.push(log);
       });
 
-      wearingLogs.save()
+      return wearingLogs.save()
       .then((wearingLogs) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -300,5 +300,71 @@ memberRouter.route('/wearingLogs/')
     err.status = 400;
     return next(err);;
   }
+});
+
+memberRouter.route('/patientInfo/')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, authenticate.verifyMobileMember,
+(req, res, next) => {
+  console.log('GET /mobile/member/patientInfo');
+  console.log('req.user: ' + req.user);
+  console.log('req.user.patient: ' + req.user.patient);
+  
+  var bodyMeasurement = undefined;
+  var spineInfo = undefined;
+
+  if (req.user.patient.bodyMeasurements.length > 0)
+    bodyMeasurement = req.user.patient.bodyMeasurements[req.user.patient.bodyMeasurements.length -1];
+
+  if (req.user.patient.spineInfos.length > 0)
+    spineInfo = req.user.patient.spineInfos[req.user.patient.spineInfos.length - 1];
+
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json({bodyMeasurement: bodyMeasurement, spineInfo: spineInfo});
+/*
+  Patients.findById(req.user.patient)
+  .then((patient) => {
+    console.log('patient: ' + req.user.patient);
+
+    if (!patient) {
+      console.log('patient are not yet created');
+      err = new Error('patient logs + ' + req.user.patient +
+                      ' with mobile member ' + req.user._id + ' is not found');
+      err.status = 400;
+      return next(err);
+    }
+    console.log('patient: ' + patient);
+
+    var bodyMeasurement = undefined;
+    var spineInfo = undefined;
+
+    if (patient.bodyMeasurement.length > 0)
+      bodyMeasurement = patient.bodyMeasurement[patient.bodyMeasurement.length -1];
+
+    if (patient.spineInfos.length > 0)
+      spineInfo = patient.spineInfos[patient.spineInfos.length - 1];
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({bodyMeasurement: bodyMeasurement, spineInfo: spineInfo});
+  }, (err) => next(err));
+
+  */
+})
+.post(cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('POST operation not supported on /mobile/member/wearingLogs');
+})
+.put(cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('PUT operation not supported on /mobile/member/wearingLogs');
+})
+.delete(cors.corsWithOptions,  authenticate.verifyMobileMember,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('DELETE operation not supported on /mobile/member/wearingLogs');
 });
 module.exports = memberRouter;
