@@ -355,16 +355,49 @@ memberRouter.route('/patientInfo/')
 .post(cors.corsWithOptions, authenticate.verifyMobileMember,
 (req, res, next) => {
   res.statusCode = 403;
-  res.end('POST operation not supported on /mobile/member/wearingLogs');
+  res.end('POST operation not supported on /mobile/member/patientInfo');
 })
 .put(cors.corsWithOptions, authenticate.verifyMobileMember,
 (req, res, next) => {
   res.statusCode = 403;
-  res.end('PUT operation not supported on /mobile/member/wearingLogs');
+  res.end('PUT operation not supported on /mobile/member/patientInfo');
 })
 .delete(cors.corsWithOptions,  authenticate.verifyMobileMember,
 (req, res, next) => {
   res.statusCode = 403;
-  res.end('DELETE operation not supported on /mobile/member/wearingLogs');
+  res.end('DELETE operation not supported on /mobile/member/patientInfo');
 });
+
+memberRouter.route('/allMobileMembers/')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req, res, next) => {
+  MobileMembers.find()
+  .then((mobileMembers) => {
+    if (!mobileMembers) {
+      err = new Error('Error fetching all patients');
+      err.status = 500;
+      return next(err);
+    }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(mobileMembers);
+  })
+});
+
+memberRouter.route('/allPatients/')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, (req, res, next) => {
+  Patients.find()
+  .then((patients) => {
+    if (!patients) {
+      err = new Error('Error fetching all patients');
+      err.status = 500;
+      return next(err);
+    }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(patients);
+  })
+});
+
 module.exports = memberRouter;

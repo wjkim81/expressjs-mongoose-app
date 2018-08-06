@@ -32,7 +32,7 @@ passport.deserializeUser((user, done) => {
 });
 
 exports.getToken = function(member) {
-  return jwt.sign(member, config.secretKey, {expiresIn: 60*60*24*30});
+  return jwt.sign(member, config.secretKey, {expiresIn: 60*60*24*365});
 };
 
 var opts = {};

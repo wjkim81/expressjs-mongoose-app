@@ -9,6 +9,9 @@ const Patients = require('../../models/patients');
 var authenticate = require('../../middlewares/authenticate');
 var cors = require('../cors');
 
+var crypto = require('crypto');
+var nodemailer = require('nodemailer');
+
 var router = express.Router();
 router.use(bodyParser.json());
 
@@ -151,6 +154,60 @@ router.get('/checkJWTToken', cors.corsWithOptions, (req, res, next) => {
       return res.json({status: 'JWT valid!', success: true, mobileMember: mobileMember});
     }
   })(req, res, next);
+});
+
+router.get('/resetPassword', cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  console.log('GET /mobile/auth/resetPassword');
+  console.log('...ing');
+
+  var newPassword = crypto.randomBytes(5).toString('hex');
+
+  MobileMembers.findById(req.user._id)
+  .then((mobileMember) => {
+
+    return mobileMember.setPassword(newPassword)
+    .then((mobileMember) => {
+      if (!mobileMember) {
+        err = new Error('Error while reseting password');
+        err.status = 500;
+        return next(err);
+      }
+      return mobileMember.save()
+      .then((mobileMember) => {
+        if (!mobileMember) {
+          err = new Error('Error while reseting password');
+          err.status = 500;
+          return next(err);
+        }
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        return res.json({success: true, status: 'Password was reset succefullyl!', password: newPassword});
+      })
+    }, (err) => next(err))
+  }, (err) => next(err))
+  .catch((err) => next(err));
+});
+
+router.post('/changePassword', cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  console.log('GET /mobile/auth/changePassword');
+  console.log('...ing');
+  MobileMembers.findById(req.user._id)
+  .then((mobileMember) => {
+    return mobileMember.changePassword(req.body.oldPassword, req.body.newPassword)
+    .then((mobileMember) => {
+      if (!mobileMember) {
+        err = new Error('Error while changing password');
+        err.status = 500;
+        return next(err);
+      }
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({success: true, status: 'Password was changed succefullyl!'});
+    }, (err) => next(err))
+  }, (err) => next(err))
+  .catch((err) => next(err));
 });
 
 module.exports = router;

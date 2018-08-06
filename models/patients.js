@@ -129,24 +129,6 @@ var xRaySchema = new Schema({
   timestamps: true
 });
 
-/*
-var threeDSchema = new Schema({
-  updatedBy: {
-    required: true,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member'
-  },
-  filePath: {
-    required: true,
-    type: String
-  },
-  description: {
-    type: String
-  }
-}, {
-  timestamps: true
-});
-*/
 var patientSchema = mongoose.Schema({
   /*
   updatedBy: {
@@ -209,20 +191,6 @@ var patientSchema = mongoose.Schema({
   timestamps: true
 });
 
-/*
-patientSchema.post('save', (doc, next) => {
-  doc
-  .populate('bodyMeasurements')
-  .populate('spineInfos')
-  .populate('xRayFiles')
-  .populate('threeDFiles')
-  .populate('visitedDays')
-  .execPopulate(() => {
-    console.log(doc);
-    next();
-  });
-});
-*/
 var Patients = mongoose.model('Patient', patientSchema);
 
 module.exports = Patients;
