@@ -309,9 +309,17 @@ memberRouter.route('/patientInfo/')
   console.log('GET /mobile/member/patientInfo');
   console.log('req.user: ' + req.user);
   console.log('req.user.patient: ' + req.user.patient);
-  
+
+  var sex = undefined;
+  var birthday = undefined;  
   var bodyMeasurement = undefined;
   var spineInfo = undefined;
+
+  if (req.user.patient.sex)
+    sex = req.user.patient.sex;
+  
+  if (req.user.patient.birthday)
+    birthday = req.user.patient.birthday;
 
   if (req.user.patient.bodyMeasurements.length > 0)
     bodyMeasurement = req.user.patient.bodyMeasurements[req.user.patient.bodyMeasurements.length -1];
@@ -321,7 +329,7 @@ memberRouter.route('/patientInfo/')
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
-  res.json({bodyMeasurement: bodyMeasurement, spineInfo: spineInfo});
+  res.json({sex: sex, birthday: birthday, bodyMeasurement: bodyMeasurement, spineInfo: spineInfo});
 /*
   Patients.findById(req.user.patient)
   .then((patient) => {
