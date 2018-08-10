@@ -25,28 +25,10 @@ router.get('/', cors.corsWithOptions, authenticate.verifyMember, authenticate.ve
   .catch((err) => next(err));
 });
 
+/*
 router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
-  //console.log(req.body);
-  //console.log(typeof(req.body));
-  //console.log(req.body.username);
-  /**
-   * Wonjin Kim
-   * 
-   * Here we should check if atomicity or trancscation is complete.
-   * When one of operatios in Members or Organizations generates an error,
-   * we need to rollback whole process of registering.
-   * However, this is skipped now
-   * 2018.04.26
-   */
 
-  /**
-   * To make sure organization id is correctly collected,
-   * we will give organization id and name to client,
-   * thus client can only choose one of organizations we provided.
-   * 
-   * req.body.organization: organization._id
-   */
   Organizations.findById(req.body.organization)
   .then((org) => {
     // To be modified
@@ -188,11 +170,11 @@ router.get('/checkJWTToken', cors.corsWithOptions, (req, res, next) => {
     }
   })(req, res, next);
 });
-
+*/
 
 
 /* GET member information with memberId. */
-router.get('/member/:memberId', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+router.get('/:memberId', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
   console.log('GET /:memberId req.user: ', req.user);
   Members.findById(req.params.memberId)
@@ -205,7 +187,7 @@ router.get('/member/:memberId', cors.corsWithOptions, authenticate.verifyMember,
   .catch((err) => next(err));
 });
 
-router.delete('/remove/:memberId', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
+router.delete('/:memberId', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   Members.findByIdAndRemove(req.params.memberId)
   .then((member) => {

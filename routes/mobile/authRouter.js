@@ -21,57 +21,41 @@ router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); }
 router.post('/signup', cors.corsWithOptions,
 (req, res, next) => {
 
-  MobileMembers.register(new MobileMembers({username: req.body.username}), 
-    req.body.password, (err, mobileMember) => {
-      if(err) {
-        res.statusCode = 500;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({err: err});
-      }
-      else {
-        console.log(`Registering new mobileMember ${req.body.username}`)
+/*
+  MobileMembers.register(new MobileMembers({username: req.body.username}), req.body.password,
+  (err, mobileMember) => {
+    if(err) {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({err: err});
+    }
+    else {
+      console.log(`Registering new mobileMember ${req.body.username}`)
 
-        mobileMember.usertype = 'mobile';
-        if (req.body.firstname)
-          mobileMember.firstname = req.body.firstname;
-        if (req.body.lastname)
-          mobileMember.lastname = req.body.lastname;
-        if (req.body.phoneNum)
-          mobileMember.phoneNum = req.body.phoneNum;
-        if (req.body.mobileNum)
-          mobileMember.mobileNum = req.body.mobileNum;
+      mobileMember.usertype = 'mobile';
+      if (req.body.firstname)
+        mobileMember.firstname = req.body.firstname;
+      if (req.body.lastname)
+        mobileMember.lastname = req.body.lastname;
+      if (req.body.phoneNum)
+        mobileMember.phoneNum = req.body.phoneNum;
+      if (req.body.mobileNum)
+        mobileMember.mobileNum = req.body.mobileNum;
 
-        if (req.body.hashKey) {
-          mobileMember.hashKey = req.body.hashKey;
+      if (req.body.hashKey) {
+        mobileMember.hashKey = req.body.hashKey;
 
-          Patients.findOne({'hashKey': req.body.hashKey})
-          .then((patient) => {
-            if (!patient) {
-              err = new Error('You are registered, But hash Key ' + req.body.hashKey + ' is not found. Please consult with your doctor');
-              err.status = 400;
-              return next(err);
-            }
-            console.log('Patient ' + patient._id + ' is found with patient ' + req.body.hashKey);
-            mobileMember.patient = patient._id;
-            
-            return mobileMember.save((err, mobileMember) => {
-              console.log('Save mobileMember');
-              if (err) {
-                res.statusCode = 500;
-                res.setHeader('Content-Type', 'application/json');
-                res.json({err: err});
-                return;
-              }
-              console.log(`mobileMember._id: ${mobileMember._id}`)
-              passport.authenticate('mobileLocal')(req, res, () => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json({success: true, status: 'Registration Successful!'});
-              });
-            });
-          }, (err) => next(err));
-        } else {
-          mobileMember.save((err, mobileMember) => {
+        Patients.findOne({'hashKey': req.body.hashKey})
+        .then((patient) => {
+          if (!patient) {
+            err = new Error('You are registered, But hash Key ' + req.body.hashKey + ' is not found. Please consult with your doctor');
+            err.status = 400;
+            return next(err);
+          }
+          console.log('Patient ' + patient._id + ' is found with patient ' + req.body.hashKey);
+          mobileMember.patient = patient._id;
+          
+          return mobileMember.save((err, mobileMember) => {
             console.log('Save mobileMember');
             if (err) {
               res.statusCode = 500;
@@ -86,9 +70,83 @@ router.post('/signup', cors.corsWithOptions,
               res.json({success: true, status: 'Registration Successful!'});
             });
           });
-        }
+        }, (err) => next(err));
+      } else {
+        mobileMember.save((err, mobileMember) => {
+          console.log('Save mobileMember');
+          if (err) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({err: err});
+            return;
+          }
+          console.log(`mobileMember._id: ${mobileMember._id}`)
+          passport.authenticate('mobileLocal')(req, res, () => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({success: true, status: 'Registration Successful!'});
+          });
+        });
       }
-    }, (err) => next(err));
+    }
+  }, (err) => next(err));
+  */
+  if (!req.body.hashKey) {
+    err = new Error('Please provide code! Consult with your doctor');
+    err.status = 400;
+    return next(err);
+  }
+  Patients.findOne({'hashKey': req.body.hashKey})
+  .then((patient) => {
+    if (!patient) {
+      err = new Error('Hash Key ' + req.body.hashKey + ' is not found. Please consult with your doctor');
+      err.status = 400;
+      return next(err);
+    }
+    console.log('Patient ' + patient._id + ' is found with hashKey ' + req.body.hashKey);
+
+    MobileMembers.register(new MobileMembers({username: req.body.username}), req.body.password,
+    (err, mobileMember) => {
+      if (err) {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({err: err});
+      } else {
+        console.log(`Registering new mobileMember ${req.body.username}`)
+
+        mobileMember.usertype = 'mobile';
+        if (req.body.firstname)
+          mobileMember.firstname = req.body.firstname;
+        if (req.body.lastname)
+          mobileMember.lastname = req.body.lastname;
+        if (req.body.phoneNum)
+          mobileMember.phoneNum = req.body.phoneNum;
+        if (req.body.mobileNum)
+          mobileMember.mobileNum = req.body.mobileNum;
+
+        if (req.body.hashKey)
+          mobileMember.hashKey = req.body.hashKey;
+        
+        mobileMember.patient = patient._id;
+        
+        return mobileMember.save((err, mobileMember) => {
+          console.log('Save mobileMember');
+          if (err) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({err: err});
+            return;
+          }
+          console.log(`mobileMember._id: ${mobileMember._id}`)
+          passport.authenticate('mobileLocal')(req, res, () => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({success: true, status: 'Registration Successful!'});
+          });
+        });
+      }
+    });
+  }, (err) => next(err));
 });
 
 router.post('/login', cors.corsWithOptions, (req, res, next) => {
