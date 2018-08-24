@@ -322,7 +322,7 @@ memberRouter.route('/patientInfo/')
     birthday = req.user.patient.birthday;
 
   if (req.user.patient.bodyMeasurements.length > 0)
-    bodyMeasurement = req.user.patient.bodyMeasurements[req.user.patient.bodyMeasurements.length -1];
+    bodyMeasurement = req.user.patient.bodyMeasurements[req.user.patient.bodyMeasurements.length - 1];
 
   if (req.user.patient.spineInfos.length > 0)
     spineInfo = req.user.patient.spineInfos[req.user.patient.spineInfos.length - 1];
