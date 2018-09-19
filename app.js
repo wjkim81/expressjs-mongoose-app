@@ -83,7 +83,7 @@ app.use('/mobile/auth', mobileAuthRouter);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors({origin: 'http://localhost:4200'}));
+app.use(cors({origin: 'https://app.vntc.me:3443'}));
 
 
 app.use('/organizations', orgRouter);
