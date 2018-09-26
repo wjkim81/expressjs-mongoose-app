@@ -6,6 +6,7 @@
     "start": "node ./bin/www",
     "nodedev": "node-dev ./bin/www",
     "forever": "forever -a start ./bin/www",
+    "forever-prod": "PORT=80 forever -a start ./bin/www",
     "forever-stop": "forever stop ./bin/www"
   },
   "dependencies": {
