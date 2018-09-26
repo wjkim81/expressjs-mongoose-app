@@ -46,25 +46,7 @@ var MemberSchema = new Schema({
     //required: true,
     type: String,
     default: ''
-  },
-  /**
-   * Members for mobile applications
-   * These are patients
-   */
-  /*
-  mobileMember: {
-    type: Boolean,
-    default: false
-  },
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient'
-  },
-  patientHashKey: {
-    type: String,
-    default: ''
   }
-  */
 }, {
   timestamps: true
 });

@@ -44,7 +44,7 @@ patientRouter.route('/')
   if (req.body.bodyMeasurements) req.body.bodyMeasurements[0].updatedBy = req.user._id;
   if (req.body.spineInfos) req.body.spineInfos[0].updatedBy = req.user._id;
   if (req.body.xRayFiles) req.body.xRayFiles[0].updatedBy = req.user._id;
-  if (req.body.threeDFiles) req.body.threeDFiles[0].updatedBy = req.user._id;
+  // if (req.body.threeDFiles) req.body.threeDFiles[0].updatedBy = req.user._id;
 
   //updating 10 digits hash key
   var hashKey = crypto.randomBytes(5).toString('hex');

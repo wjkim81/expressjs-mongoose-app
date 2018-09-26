@@ -84,6 +84,10 @@ var spineInfoSchema = new Schema({
     required: true,
     type: String
   },
+  major1: {
+    required: true,
+    type: Boolean
+  },
   curveStart2: {
     type: String
   },
@@ -96,6 +100,10 @@ var spineInfoSchema = new Schema({
   direction2: {
     type: String
   },
+  major2: {
+    required: true,
+    type: Boolean
+  },
   curveStart3: {
     type: String
   },
@@ -107,6 +115,10 @@ var spineInfoSchema = new Schema({
   },
   direction3: {
     type: String
+  },
+  major3: {
+    required: true,
+    type: Boolean
   }
 }, {
   timestamps: true
@@ -123,6 +135,20 @@ var xRaySchema = new Schema({
     type: String
   },
   description: {
+    type: String
+  }
+}, {
+  timestamps: true
+});
+
+var commentSchema = new Schema({
+  updatedBy: {
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Member'
+  },
+  comment: {
+    required: true,
     type: String
   }
 }, {
@@ -184,7 +210,7 @@ var patientSchema = mongoose.Schema({
   bodyMeasurements: [bodyMeasurementSchema],
   spineInfos: [spineInfoSchema],
   xRayFiles: [xRaySchema],
-  //threeDFiles: [threeDSchema],
+  thrcommenteeDFiles: [commentSchema],
   visitedDays: [Date],
   nextVisitDay: Date
 }, {
