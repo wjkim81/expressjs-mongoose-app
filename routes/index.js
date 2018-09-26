@@ -7,13 +7,11 @@ var path = require('path');
 
 router.use('/', webRouter);
 
-/* GET home page from angular distribution */
+/* GET page of angular distribution */
 router.route('*')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors, (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
-
-
 
 module.exports = router;
