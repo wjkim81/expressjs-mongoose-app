@@ -11,18 +11,18 @@ var config = require('./config');
 var cors = require('cors');
 
 var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
+
 var authRouter = require('./routes/web/authRouter');
 var mobileAuthRouter = require('./routes/mobile/authRouter');
 
-//var memberRouter = require('./routes/member');
-var orgRouter = require('./routes/orgRouter');
-var memberRouter = require('./routes/memberRouter');
-var patientRouter = require('./routes/patientRouter');
-var adminRouter = require('./routes/adminRouter');
-var uploadRouter = require('./routes/uploadRouter');
+// var orgRouter = require('./routes/orgRouter');
+// var membersRouter = require('./routes/memberRouter');
+// var patientRouter = require('./routes/web/patientRouter');
+// var adminRouter = require('./routes/web/adminRouter');
+// var uploadRouter = require('./routes/web/uploadRouter');
 
 var mobileRouter = require('./routes/mobile');
+// var webRouter = require('./routes/web');
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -86,11 +86,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({origin: 'http://localhost:4200'}));
 
 
-app.use('/organizations', orgRouter);
-app.use('/members', memberRouter);
-app.use('/patients', patientRouter);
-app.use('/admins', adminRouter);
-app.use('/imageUpload', uploadRouter);
+// app.use('/organizations', orgRouter);
+// app.use('/members', membersRouter);
+// app.use('/patients', patientRouter);
+// app.use('/admins', adminRouter);
+// app.use('/imageUpload', uploadRouter);
 
 app.use('/mobile', mobileRouter);
 app.use('/', indexRouter);

@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const authenticate = require('../middlewares/authenticate');
-const cors = require('./cors');
+const authenticate = require('../../middlewares/authenticate');
+const cors = require('../cors');
 
-const Organizations = require('../models/organizations');
-const Members = require('../models/members');
+const Organizations = require('../../models/organizations');
+const Members = require('../../models/members');
 
 const orgRouter = express.Router();
 

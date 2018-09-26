@@ -5,11 +5,11 @@ var crypto = require('crypto');
 
 
 //const mongoose = require('mongoose');
-const authenticate = require('../middlewares/authenticate');
-const cors = require('./cors');
+const authenticate = require('../../middlewares/authenticate');
+const cors = require('../cors');
 
-const Patients = require('../models/patients');
-const Organizations = require('../models/organizations');
+const Patients = require('../../models/patients');
+const Organizations = require('../../models/organizations');
 
 const patientRouter = express.Router();
 
