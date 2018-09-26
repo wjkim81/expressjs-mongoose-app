@@ -171,4 +171,25 @@ router.get('/checkJWTToken', cors.corsWithOptions, (req, res, next) => {
   })(req, res, next);
 });
 
+router.post('/changePassword', cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  console.log('GET /auth/changePassword');
+  console.log('...ing');
+  Members.findById(req.user._id)
+  .then((member) => {
+    return member.changePassword(req.body.oldPassword, req.body.newPassword)
+    .then((member) => {
+      if (!member) {
+        err = new Error('Error while changing password');
+        err.status = 500;
+        return next(err);
+      }
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({success: true, status: 'Password was changed succefullyl!'});
+    }, (err) => next(err))
+  }, (err) => next(err))
+  .catch((err) => next(err));
+});
+
 module.exports = router;

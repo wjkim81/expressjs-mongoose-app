@@ -1,9 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-var crypto = require('crypto');
-
-
+// var crypto = require('crypto');
 //const mongoose = require('mongoose');
 const authenticate = require('../../middlewares/authenticate');
 const cors = require('../cors');
@@ -17,12 +15,15 @@ patientRouter.use(bodyParser.json());
 
 patientRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
-.get(cors.cors, authenticate.verifyMember, (req,res,next) => {
+.get(cors.cors, authenticate.verifyMember,
+(req, res, next) => {
   console.log('req.query: ', req.query);
   console.log('req.user: ', req.user);
   var query = {};
-  if (req.user.organization) query.organization = req.user.organization;
-  if (req.query) query.updatedAt = {"$gte": req.query.startDate, "$lte": req.query.endDate};
+  if (req.user.organization)
+    query.organization = req.user.organization;
+  if (Object.keys(req.query).length !== 0)
+    query.updatedAt = {"$gte": req.query.startDate, "$lte": req.query.endDate};
 
   console.log('query: ', query);
 
@@ -38,29 +39,29 @@ patientRouter.route('/')
 })
 .post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
-  console.log('Before updating req.body: ', req.body);
+
+  // console.log('Before updating req.body: ', req.body);
   //var patient = req.body;
   req.body.organization = req.user.organization;
   if (req.body.bodyMeasurements) req.body.bodyMeasurements[0].updatedBy = req.user._id;
   if (req.body.spineInfos) req.body.spineInfos[0].updatedBy = req.user._id;
   if (req.body.xRayFiles) req.body.xRayFiles[0].updatedBy = req.user._id;
+  if (req.body.comments) req.body.comments[0].updatedBy = req.user._id;
   // if (req.body.threeDFiles) req.body.threeDFiles[0].updatedBy = req.user._id;
 
   //updating 10 digits hash key
-  var hashKey = crypto.randomBytes(5).toString('hex');
+  // var hashKey = crypto.randomBytes(5).toString('hex');
 
-  Patients.findOne({hashKey: hashKey})
+  Patients.findOne({hashKey: req.body.hashKey})
   .then((patient) => {
     if (patient) {
-      err = new Error('Hash Key ' + hassKey + ' is already used\n Please register Patient again');
+      err = new Error('Hash Key ' + hashKey + ' is already used\n Please register Patient again');
       err.status = 400;
       return next(err);
     } else {
-
-      req.body.hashKey = hashKey;
-      console.log('After updating req.body: ', req.body);
+      // console.log('After updating req.body: ', req.body);
       /**
-       * req.body.organizationId: organization._id
+       * req.body.organization: organization._id
        */
       Organizations.findById(req.body.organization)
       .then((org) => {
@@ -83,7 +84,7 @@ patientRouter.route('/')
         if (req.body.xRayFiles) patient.xRayFiles.push(req.body.xRayFiles[0]);
         if (req.body.threeDFiles) patient.threeDFiles.push(req.body.threeDFiles[0]);
         */
-        Patients.create(req.body)
+        return Patients.create(req.body)
         //.populate('orgId')
         //patient.save()
         .then((patient) => {
@@ -99,7 +100,6 @@ patientRouter.route('/')
       .catch((err) => next(err));
     }
   });
-
 })
 .put(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
@@ -120,7 +120,7 @@ patientRouter.route('/')
 patientRouter.route('/:patientId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
 .get(cors.cors, authenticate.verifyMember,
-(req,res,next) => {
+(req, res, next) => {
   Patients.findById(req.params.patientId)
   .populate('organization')
   .populate('spineInfos.updatedBy')
@@ -194,7 +194,7 @@ patientRouter.route('/:patientId')
 patientRouter.route('/:patientId/spineInfos')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
 .get(cors.cors, authenticate.verifyMember,
-(req,res,next) => {
+(req, res, next) => {
   Patients.findById(req.params.patientId)
   .then((patient) => {
     if (patient.organization != req.user.organization) {
@@ -266,7 +266,7 @@ patientRouter.route('/:patientId/spineInfos')
 patientRouter.route('/:patientId/bodyMeasurements')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
 .get(cors.cors, authenticate.verifyMember,
-(req,res,next) => {
+(req, res, next) => {
   Patients.findById(req.params.patientId)
   .then((patient) => {
     if (patient.organization != req.user.organization) {

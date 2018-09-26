@@ -55,7 +55,8 @@ adminRouter.route('/patients')
   console.log('req.query: ', req.query);
   console.log('req.user: ', req.user);
   var query = {};
-  if (req.query) query.updatedAt = {"$gte": req.query.startDate, "$lte": req.query.endDate};
+  if (Object.keys(req.query).length !== 0)
+    query.updatedAt = {"$gte": req.query.startDate, "$lte": req.query.endDate};
 
   console.log('query: ', query);
 

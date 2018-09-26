@@ -46,6 +46,11 @@ var MemberSchema = new Schema({
     //required: true,
     type: String,
     default: ''
+  },
+  email: {
+    //required: true,
+    type: String,
+    default: ''
   }
 }, {
   timestamps: true

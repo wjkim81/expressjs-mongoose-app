@@ -101,7 +101,6 @@ var spineInfoSchema = new Schema({
     type: String
   },
   major2: {
-    required: true,
     type: Boolean
   },
   curveStart3: {
@@ -117,7 +116,6 @@ var spineInfoSchema = new Schema({
     type: String
   },
   major3: {
-    required: true,
     type: Boolean
   }
 }, {
@@ -210,7 +208,7 @@ var patientSchema = mongoose.Schema({
   bodyMeasurements: [bodyMeasurementSchema],
   spineInfos: [spineInfoSchema],
   xRayFiles: [xRaySchema],
-  thrcommenteeDFiles: [commentSchema],
+  comments: [commentSchema],
   visitedDays: [Date],
   nextVisitDay: Date
 }, {

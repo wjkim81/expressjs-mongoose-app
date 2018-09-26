@@ -10,7 +10,7 @@ var cors = require('../cors');
 var router = express.Router();
 router.use(bodyParser.json());
 
-/* GET users listing. */
+/* GET all members listing. */
 router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
 router.get('/', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {

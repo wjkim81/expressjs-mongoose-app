@@ -12,8 +12,8 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 
-var authRouter = require('./routes/web/authRouter');
-var mobileAuthRouter = require('./routes/mobile/authRouter');
+// var authRouter = require('./routes/web/authRouter');
+// var mobileAuthRouter = require('./routes/mobile/authRouter');
 
 // var orgRouter = require('./routes/orgRouter');
 // var membersRouter = require('./routes/memberRouter');
@@ -76,8 +76,8 @@ app.use('*', (req, res, next) => {
 })
 
 //app.use('/users', usersRouter);
-app.use('/auth', authRouter);
-app.use('/mobile/auth', mobileAuthRouter);
+// app.use('/auth', authRouter);
+// app.use('/mobile/auth', mobileAuthRouter);
 //app.use('/members', memberRouter);
 
 
@@ -93,7 +93,7 @@ app.use(cors({origin: 'http://localhost:4200'}));
 // app.use('/imageUpload', uploadRouter);
 
 app.use('/mobile', mobileRouter);
-app.use('/', indexRouter);
+app.use('/', indexRouter); // indexRouter has all routers for web
 
 
 // catch 404 and forward to error handler
