@@ -209,7 +209,7 @@ var patientSchema = mongoose.Schema({
   spineInfos: [spineInfoSchema],
   xRayFiles: [xRaySchema],
   comments: [commentSchema],
-  visitedDays: [Date],
+  // visitedDays: [Date],
   nextVisitDay: Date
 }, {
   timestamps: true

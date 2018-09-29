@@ -126,7 +126,7 @@ patientRouter.route('/:patientId')
   .populate('spineInfos.updatedBy')
   .populate('bodyMeasurements.updatedBy')
   .populate('xRayFiles.updatedBy')
-  .populate('threeDFiles.updatedBy')
+  .populate('comments.updatedBy')
   .then((patient) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
@@ -210,7 +210,7 @@ patientRouter.route('/:patientId/spineInfos')
 })
 .post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
-  console.log('POST spineInfos  ' + req.params.patientId);
+  console.log('POST spineInfos ' + req.params.patientId);
 
   Patients.findById(req.params.patientId)
   .then((patient) => {
@@ -230,7 +230,7 @@ patientRouter.route('/:patientId/spineInfos')
     req.body.updatedBy = req.user._id;
     patient.spineInfos.push(req.body);
 
-    patient.save()
+    return patient.save()
     .then((patient) => {
       
       patient
@@ -238,7 +238,7 @@ patientRouter.route('/:patientId/spineInfos')
       .populate('spineInfos.updatedBy')
       .populate('bodyMeasurements.updatedBy')
       .populate('xRayFiles.updatedBy')
-      .populate('threeDFiles.updatedBy', (err) => {
+      .populate('comments.updatedBy', (err) => {
         if (err) {
           next(err);
         } else {
@@ -282,7 +282,7 @@ patientRouter.route('/:patientId/bodyMeasurements')
 })
 .post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
 (req, res, next) => {
-  console.log('POST bodyMeasurements  ' + req.params.patientId);
+  console.log('POST bodyMeasurements ' + req.params.patientId);
 
   Patients.findById(req.params.patientId)
   .then((patient) => {
@@ -302,7 +302,7 @@ patientRouter.route('/:patientId/bodyMeasurements')
     req.body.updatedBy = req.user._id;
     patient.bodyMeasurements.push(req.body);
 
-    patient.save()
+    return patient.save()
     .then((patient) => {
       
       patient
@@ -310,7 +310,79 @@ patientRouter.route('/:patientId/bodyMeasurements')
       .populate('spineInfos.updatedBy')
       .populate('bodyMeasurements.updatedBy')
       .populate('xRayFiles.updatedBy')
-      .populate('threeDFiles.updatedBy', (err) => {
+      .populate('comments.updatedBy', (err) => {
+        if (err) {
+          next(err);
+        } else {
+          console.log('patient: ', patient);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          return res.json(patient);
+        }
+      });
+    }, (err) => next(err));
+  }, (err) => next(err))
+  .catch((err) => next(err));
+})
+.put(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('PUT operation not supported on /patients/'+ req.params.patientId + '/bodyMeasurements');
+})
+.delete(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('DELETE operation not supported on /patients/'+ req.params.patientId + '/bodyMeasurements');
+});
+
+patientRouter.route('/:patientId/comments')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200)} )
+.get(cors.cors, authenticate.verifyMember,
+(req, res, next) => {
+  Patients.findById(req.params.patientId)
+  .then((patient) => {
+    if (patient.organization != req.user.organization) {
+      var err = new Error('Member ' + req.user._id + ' cannot request GET on patient ' + req.params.patientId);
+      res.statusCode = 403;
+      return next(err);
+    }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    return res.json(patient.comments);
+  }, (err) => next(err))
+  .catch((err) => next(err));
+})
+.post(cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+(req, res, next) => {
+  console.log('POST comment ' + req.params.patientId);
+
+  Patients.findById(req.params.patientId)
+  .then((patient) => {
+
+    console.log(`${patient.organization} : ${req.user.organization._id}`);
+    if (!patient.organization.equals(req.user.organization)) {
+      var err = new Error('Member ' + req.user._id + ' cannot request GET on patient ' + req.params.patientId);
+      err.status = 403;
+      return next(err);
+    }
+    
+    if (!patient) {
+      var err = new Error('Patient ' + req.params.patientId + ' is not found');
+      err.status = 404;
+      return next(err);
+    }
+    req.body.updatedBy = req.user._id;
+    patient.comments.push(req.body);
+
+    return patient.save()
+    .then((patient) => {
+      
+      patient
+      .populate('organization')
+      .populate('spineInfos.updatedBy')
+      .populate('bodyMeasurements.updatedBy')
+      .populate('xRayFiles.updatedBy')
+      .populate('comments.updatedBy', (err) => {
         if (err) {
           next(err);
         } else {
