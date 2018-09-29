@@ -5,8 +5,11 @@
   "scripts": {
     "start": "node ./bin/www",
     "nodedev": "node-dev ./bin/www",
+    "nodedev-prod": "ENV=PROD PORT=80 node-dev ./bin/www",
+    "nodedev-test": "ENV=TEST node-dev ./bin/www",
     "forever": "forever -a start ./bin/www",
-    "forever-prod": "PORT=80 forever -a start ./bin/www",
+    "forever-prod": "ENV=PROD PORT=80 forever -a start ./bin/www",
+    "forever-test": "ENV=TEST forever -a start ./bin/www",
     "forever-stop": "forever stop ./bin/www"
   },
   "dependencies": {

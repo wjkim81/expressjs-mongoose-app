@@ -34,7 +34,6 @@ const connect = mongoose.connect(url);
 connect.then((db) => {
   var db = mongoose.connection;
   console.log("Connected correctly to server");
-
 }, (err) => { console.log(err); });
 
 
@@ -83,8 +82,17 @@ app.use('*', (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(cors({origin: 'https://app.vntc.me'}));
-app.use(cors({origin: 'http://localhost:4200'}));
+
+console.log(`process.env.ENV: ${process.env.ENV}`);
+if (process.env.ENV === 'PROD') {
+  app.use(cors({origin: 'https://app.vntc.me'}));
+} else if (process.env.ENV === 'TEST') {
+  app.use(cors({origin: 'https://client.vntc.me:3443'}));
+} else {
+  app.use(cors({origin: 'http://localhost:4200'}));
+}
+
+
 
 
 // app.use('/organizations', orgRouter);
