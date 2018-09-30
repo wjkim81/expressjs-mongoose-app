@@ -12,7 +12,7 @@ router.use(bodyParser.json());
 
 /* GET all members listing. */
 router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
-router.get('/', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+router.get('/', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   console.log('GET / req.user: ', req.user);
   Members.find({})
@@ -26,7 +26,7 @@ router.get('/', cors.corsWithOptions, authenticate.verifyMember, //authenticate.
 });
 
 /* GET member information with memberId. */
-router.get('/:memberId', cors.corsWithOptions, authenticate.verifyMember, //authenticate.verifyAdmin,
+router.get('/:memberId', cors.corsWithOptions, authenticate.verifyMember, authenticate.verifyAdmin,
 (req, res, next) => {
   console.log('GET /:memberId req.user: ', req.user);
   Members.findById(req.params.memberId)

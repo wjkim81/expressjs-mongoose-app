@@ -20,12 +20,14 @@ patientRouter.route('/')
   console.log('req.query: ', req.query);
   console.log('req.user: ', req.user);
   var query = {};
+
   if (req.user.organization)
-    query.organization = req.user.organization;
+    query.organization = req.user.organization._id;
+
   if (Object.keys(req.query).length !== 0)
     query.updatedAt = {"$gte": req.query.startDate, "$lte": req.query.endDate};
 
-  console.log('query: ', query);
+  console.log('search query: ', query);
 
   //Patients.find({ "organization": req.user.organization })
   Patients.find(query)
@@ -217,7 +219,7 @@ patientRouter.route('/:patientId/spineInfos')
 
     console.log(`${patient.organization} : ${req.user.organization._id}`);
     if (!patient.organization.equals(req.user.organization)) {
-      var err = new Error('Member ' + req.user._id + ' cannot request GET on patient ' + req.params.patientId);
+      var err = new Error('Member ' + req.user._id + ' cannot request POST on patient ' + req.params.patientId);
       err.status = 403;
       return next(err);
     }
@@ -289,7 +291,7 @@ patientRouter.route('/:patientId/bodyMeasurements')
 
     console.log(`${patient.organization} : ${req.user.organization._id}`);
     if (!patient.organization.equals(req.user.organization)) {
-      var err = new Error('Member ' + req.user._id + ' cannot request GET on patient ' + req.params.patientId);
+      var err = new Error('Member ' + req.user._id + ' cannot request POST on patient ' + req.params.patientId);
       err.status = 403;
       return next(err);
     }
@@ -361,7 +363,7 @@ patientRouter.route('/:patientId/comments')
 
     console.log(`${patient.organization} : ${req.user.organization._id}`);
     if (!patient.organization.equals(req.user.organization)) {
-      var err = new Error('Member ' + req.user._id + ' cannot request GET on patient ' + req.params.patientId);
+      var err = new Error('Member ' + req.user._id + ' cannot request POST on patient ' + req.params.patientId);
       err.status = 403;
       return next(err);
     }

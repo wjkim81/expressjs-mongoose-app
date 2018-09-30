@@ -36,8 +36,6 @@ connect.then((db) => {
   console.log("Connected correctly to server");
 }, (err) => { console.log(err); });
 
-
-
 var app = express();
 
 // Secure traffic only
@@ -49,9 +47,6 @@ app.all('*', (req, res, next) => {
     res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url);
   }
 });
-
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -71,6 +66,8 @@ app.use(passport.initialize());
 
 app.use('*', (req, res, next) => {
   console.log('req.headers.authorization: ', req.headers.authorization);
+  // console.log('req.headers: ');
+  // console.log(req.headers);
   next();
 })
 
