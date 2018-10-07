@@ -419,17 +419,19 @@ patientRouter.route('/:patientId/wearingLogs/')
   Patients.findById(req.params.patientId)
   .then((patient) => {
     return MobileMembers.find({hashKey: patient.hashKey})
+    .populate('wearingLogs')
     .then((mobileMember) => {
-      console.log(mobileMember.wearingLogs);
+      console.log('mobileMember');
+      console.log(mobileMember);
 
-      WearingLogs.findById(mobileMember.wearingLogs)
+      return WearingLogs.findById(mobileMember.wearingLogs)
       .then((wearingLogs) => {
-        console.log('wearingLogs: ' + mobileMembe.wearingLogs);
+        console.log('wearingLogs: ' + mobileMember.wearingLogs);
 
         if (!wearingLogs) {
           console.log('wearingLogs are not yet created');
-          err = new Error('Wearing logs + ' + mobileMember.wearingLogs +
-                          ' with mobile member ' + mobileMembe._id + ' is not found');
+          err = new Error('Wearing logs ' + mobileMember.wearingLogs +
+                          ' with mobile member ' + mobileMember._id + ' is not found');
           err.status = 400;
           return next(err);
         }
