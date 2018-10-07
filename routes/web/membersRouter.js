@@ -5,7 +5,7 @@ var Organizations = require('../../models/organizations');
 
 var passport = require('passport');
 var authenticate = require('../../middlewares/authenticate');
-var cors = require('../cors');
+var cors = require('../../middlewares/cors');
 
 var router = express.Router();
 router.use(bodyParser.json());

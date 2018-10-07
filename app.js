@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var passport = require('passport');
 var authenticate = require('./middlewares/authenticate');
-var config = require('./config');
+var dbconfig = require('./config/db.config');
 
 var cors = require('cors');
 
@@ -28,7 +28,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 // Connection URL
-const url = config.mongoUrl;
+const url = dbconfig.mongoUrl;
 const connect = mongoose.connect(url);
 
 connect.then((db) => {

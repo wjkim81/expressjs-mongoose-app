@@ -6,7 +6,7 @@ var WearingLogs = require('../../models/wearingLogs');
 
 //var passport = require('passport');
 var authenticate = require('../../middlewares/authenticate');
-var cors = require('../cors');
+var cors = require('../../middlewares/cors');
 
 var memberRouter = express.Router();
 memberRouter.use(bodyParser.json());

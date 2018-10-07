@@ -8,7 +8,7 @@
 // define('NONCE_SALT',       '5%%8C+;0-@?(T(HlC6o&{JV[U/<mwP8/lL+pVSeA+|wlFVir}w!<Hd{`-O)-L:+e');
 
 module.exports = {
-    // 'secretKey': '12345-67890-09876-54321',
-    'secretKey': '17sUJPRglDNZAJ_t@_D|<-xYR_q/oR%J.v&ffYyPT)`Y]:KruIDlHWj0>6a|fjx)',
-    'mongoUrl' : 'mongodb://localhost:27017/vntcDb'
+  // 'secretKey': '12345-67890-09876-54321',
+  'secretKey': '17sUJPRglDNZAJ_t@_D|<-xYR_q/oR%J.v&ffYyPT)`Y]:KruIDlHWj0>6a|fjx)',
+  'mongoUrl' : 'mongodb://localhost:27017/vntcDb'
 }

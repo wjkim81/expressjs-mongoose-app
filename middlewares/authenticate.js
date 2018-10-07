@@ -7,7 +7,7 @@ var jwt = require('jsonwebtoken');
 
 var Member = require('../models/members');
 var MobileMember = require('../models/mobileMembers');
-var config = require('../config');
+var dbconfig = require('../config/db.config');
 
 exports.web = passport.use('webLocal', new LocalStrategy({session: false}, Member.authenticate()));
 exports.mobile = passport.use('mobileLocal', new LocalStrategy({session: false}, MobileMember.authenticate()));
@@ -32,12 +32,12 @@ passport.deserializeUser((user, done) => {
 });
 
 exports.getToken = function(member) {
-  return jwt.sign(member, config.secretKey, {expiresIn: 60*60*24*365});
+  return jwt.sign(member, dbconfig.secretKey, {expiresIn: 60*60*24*365});
 };
 
 var opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = config.secretKey;
+opts.secretOrKey = dbconfig.secretKey;
 
 exports.jwtPassport = passport.use('webjwt', new JwtStrategy(opts,
 (jwt_payload, done) => {

@@ -6,7 +6,7 @@ var crypto = require('crypto');
 
 //const mongoose = require('mongoose');
 const authenticate = require('../../middlewares/authenticate');
-const cors = require('../cors');
+const cors = require('../../middlewares/cors');
 
 const Patients = require('../../models/patients');
 const hashkeyRouter = express.Router();

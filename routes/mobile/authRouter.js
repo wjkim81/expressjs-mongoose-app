@@ -7,7 +7,7 @@ const MobileMembers = require('../../models/mobileMembers');
 const Patients = require('../../models/patients');
 
 var authenticate = require('../../middlewares/authenticate');
-var cors = require('../cors');
+var cors = require('../../middlewares/cors');
 
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');

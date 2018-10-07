@@ -4,10 +4,11 @@ const bodyParser = require('body-parser');
 // var crypto = require('crypto');
 //const mongoose = require('mongoose');
 const authenticate = require('../../middlewares/authenticate');
-const cors = require('../cors');
+const cors = require('../../middlewares/cors');
 
 const Patients = require('../../models/patients');
 const Organizations = require('../../models/organizations');
+const MobileMembers = require('../../models/mobileMembers');
 
 const patientRouter = express.Router();
 
@@ -409,4 +410,48 @@ patientRouter.route('/:patientId/comments')
   res.end('DELETE operation not supported on /patients/'+ req.params.patientId + '/bodyMeasurements');
 });
 
+patientRouter.route('/:patientId/wearingLogs/')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, authenticate.verifyMember,
+(req, res, next) => {
+
+  Patients.findById(req.params.patientId)
+  .then((patient) => {
+    return MobileMembers.find({hashKey: patient.hashKey})
+    .then((mobileMember) => {
+      WearingLogs.findById(mobileMember.wearingLogs)
+      .then((wearingLogs) => {
+        console.log('wearingLogs: ' + mobileMembe.wearingLogs);
+
+        if (!wearingLogs) {
+          console.log('wearingLogs are not yet created');
+          err = new Error('Wearing logs + ' + mobileMember.wearingLogs +
+                          ' with mobile member ' + mobileMembe._id + ' is not found');
+          err.status = 400;
+          return next(err);
+        }
+        console.log('wearingLogs: ' + wearingLogs);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        return res.json(wearingLogs);
+      }, (err) => next(err));
+    }, (err) => next(err))
+  }, (err) => next(err))
+  .catch((err) => next(err));
+})
+.post(cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('POST operation not supported on /patients/' + req.params.patientId + '/wearingLogs');
+})
+.put(cors.corsWithOptions, authenticate.verifyMobileMember,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('PUT operation not supported on /patients/' + req.params.patientId + '/wearingLogs');
+})
+.delete(cors.corsWithOptions,  authenticate.verifyMobileMember,
+(req, res, next) => {
+  res.statusCode = 403;
+  res.end('DELETE operation not supported on /patients/' + req.params.patientId + '/wearingLogs');
+});
 module.exports = patientRouter;

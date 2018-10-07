@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authenticate = require('../../middlewares/authenticate');
 const multer = require('multer');
-const cors = require('../cors');
+const cors = require('../../middlewares/cors');
 
 const fs = require('fs');
 const path = require('path');

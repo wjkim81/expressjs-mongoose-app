@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var cors = require('./cors');
+var cors = require('../middlewares/cors');
 var webRouter = require('./web')
 var path = require('path');
 

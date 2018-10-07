@@ -33,12 +33,7 @@ var MemberSchema = new Schema({
     ref: 'Organization'
   },
   //type: String, //`types` varchar(100) DEFAULT NULL,
-  subject: {
-    type: String,
-    default: ''
-  },
-  phoneNum: {
-    //required: true,
+  department: {
     type: String,
     default: ''
   },

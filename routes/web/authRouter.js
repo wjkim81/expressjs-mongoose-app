@@ -5,12 +5,11 @@ var Organizations = require('../../models/organizations');
 
 var passport = require('passport');
 var authenticate = require('../../middlewares/authenticate');
-var cors = require('../cors');
+var cors = require('../../middlewares/cors');
 
 var router = express.Router();
 router.use(bodyParser.json());
 
-/* GET users listing. */
 router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
 
 router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authenticate.verifyAdmin,
@@ -30,7 +29,7 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
 
   /**
    * To make sure organization id is correctly collected,
-   * we will give organization id and name to client,
+   * we will give an organization id and name to client,
    * thus client can only choose one of organizations we provided.
    * 
    * req.body.organization: organization._id
@@ -63,10 +62,10 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
           member.lastname = req.body.lastname;
         if (req.body.organization)
           member.organization = req.body.organization;
-        if (req.body.subject)
-          member.subject = req.body.subject;
-        if (req.body.phoneNum)
-          member.phoneNum = req.body.phoneNum;
+        if (req.body.department)
+          member.department = req.body.department;
+        if (req.body.email)
+          member.email = req.body.email;
         if (req.body.mobileNum)
           member.mobileNum = req.body.mobileNum;
         
@@ -104,7 +103,7 @@ router.post('/signup', cors.corsWithOptions, //authenticate.verifyMember, authen
 });
 
 router.post('/login', cors.corsWithOptions, (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   console.log('POST /auth/login ing...');
   passport.authenticate('webLocal', {session: false}, (err, member, info) => {
     //console.log(err);
@@ -129,8 +128,18 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
           var token = authenticate.getToken({_id: req.user._id});
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
-          //console.log('finished');
-          res.json({success: true, status: 'Login Successful!', token: token});
+          let credentials = {
+            success: true,
+            status: 'Login Successful!',
+            token: token,
+            name: member.firstname + ' ' + member.lastname,
+            admin: member.admin
+            // firstname: member.firstname,
+            // lastname: member.lastname
+          }
+          console.log(credentials);
+          // res.json({success: true, status: 'Login Successful!', token: token, name: member.name});
+          res.json(credentials);
         }
       });
     }
