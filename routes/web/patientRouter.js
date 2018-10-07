@@ -421,12 +421,12 @@ patientRouter.route('/:patientId/wearingLogs/')
     return MobileMembers.find({hashKey: patient.hashKey})
     .populate("wearingLogs")
     .then((mobileMember) => {
-      console.log(mobileMember);
+      // console.log(mobileMember);
 
-      console.log('wearingLogs: ');
-      console.log(mobileMember.wearingLogs.logs);
+      // console.log('wearingLogs: ');
+      // console.log(mobileMember[0].wearingLogs.logs);
 
-      let wearingLogs = mobileMember.wearingLogs.logs;
+      let wearingLogs = mobileMember[0].wearingLogs.logs;
       if (wearingLogs.length === 0) {
         console.log('wearingLogs are not yet created');
         err = new Error('Wearing logs with patient ' + req.user._id + ' is not found');
