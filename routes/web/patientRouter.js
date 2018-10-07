@@ -419,27 +419,24 @@ patientRouter.route('/:patientId/wearingLogs/')
   Patients.findById(req.params.patientId)
   .then((patient) => {
     return MobileMembers.find({hashKey: patient.hashKey})
-    .populate('wearingLogs')
+    .populate("wearingLogs")
     .then((mobileMember) => {
-      console.log('mobileMember');
       console.log(mobileMember);
 
-      return WearingLogs.findById(mobileMember.wearingLogs)
-      .then((wearingLogs) => {
-        console.log('wearingLogs: ' + mobileMember.wearingLogs);
+      console.log('wearingLogs: ');
+      console.log(mobileMember.wearingLogs.logs);
 
-        if (!wearingLogs) {
-          console.log('wearingLogs are not yet created');
-          err = new Error('Wearing logs ' + mobileMember.wearingLogs +
-                          ' with mobile member ' + mobileMember._id + ' is not found');
-          err.status = 400;
-          return next(err);
-        }
-        console.log('wearingLogs: ' + wearingLogs);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        return res.json(wearingLogs);
-      }, (err) => next(err));
+      let wearingLogs = mobileMember.wearingLogs.logs;
+      if (wearingLogs.length === 0) {
+        console.log('wearingLogs are not yet created');
+        err = new Error('Wearing logs with patient ' + req.user._id + ' is not found');
+        err.status = 400;
+        return next(err);
+      }
+      // console.log('wearingLogs: ' + wearingLogs);
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      return res.json(wearingLogs);
     }, (err) => next(err))
   }, (err) => next(err))
   .catch((err) => next(err));
