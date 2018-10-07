@@ -9,6 +9,7 @@ const cors = require('../../middlewares/cors');
 const Patients = require('../../models/patients');
 const Organizations = require('../../models/organizations');
 const MobileMembers = require('../../models/mobileMembers');
+const WearingLogs = require('../../models/wearingLogs');
 
 const patientRouter = express.Router();
 
@@ -419,6 +420,8 @@ patientRouter.route('/:patientId/wearingLogs/')
   .then((patient) => {
     return MobileMembers.find({hashKey: patient.hashKey})
     .then((mobileMember) => {
+      console.log(mobileMember.wearingLogs);
+
       WearingLogs.findById(mobileMember.wearingLogs)
       .then((wearingLogs) => {
         console.log('wearingLogs: ' + mobileMembe.wearingLogs);
