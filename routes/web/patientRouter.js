@@ -428,10 +428,7 @@ patientRouter.route('/:patientId/wearingLogs/')
 
       let wearingLogs = mobileMember[0].wearingLogs.logs;
       if (wearingLogs.length === 0) {
-        console.log('wearingLogs are not yet created');
-        err = new Error('Wearing logs with patient ' + req.user._id + ' is not found');
-        err.status = 400;
-        return next(err);
+        wearingLogs = [];
       }
       // console.log('wearingLogs: ' + wearingLogs);
       res.statusCode = 200;
